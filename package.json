@@ -1,0 +1,45 @@
+{
+  "name": "ssc-formula",
+  "version": "0.1.0",
+  "description": "SSC Formula React component",
+  "keywords": [
+    "react",
+    "react-component",
+    "formula"
+  ],
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "homepage": "https://github.com/yyssc/ssc-formula",
+  "author": "Devin Chen",
+  "repository": "http://github.com/yyssc/ssc-formula",
+  "bugs": "https://github.com/yyssc/ssc-formula/issues",
+  "license": "MIT",
+  "main": "./build/index",
+  "config": {
+    "port": 8000
+  },
+  "scripts": {
+    "dev": "bee-tools run start",
+    "build": "bee-tools run build",
+    "lint": "bee-tools run lint",
+    "test": "bee-tools run test",
+    "chrome": "bee-tools run chrome",
+    "browsers": "bee-tools run browsers",
+    "pub": "bee-tools run pub"
+  },
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "react-bootstrap": "^0.30.8",
+    "ssc-refer": "^0.1.27"
+  },
+  "devDependencies": {
+    "bee-tools": "0.0.16",
+    "chai": "^3.5.0",
+    "console-polyfill": "~0.2.1",
+    "enzyme": "^2.4.1",
+    "es5-shim": "~4.1.10",
+    "react": "~0.14.0",
+    "react-dom": "~0.14.0"
+  }
+}
