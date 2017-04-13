@@ -1,5 +1,7 @@
 # ssc-formula
 
+![](screenshot_20170413_005.jpg)
+
 ## 如何发布
 
 1. 修改`package.json`中的版本号
