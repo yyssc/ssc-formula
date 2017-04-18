@@ -39,24 +39,22 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 // import Config from '../../config';
-function getConfig() {
-    var serverUrl = 'https://fi.yonyoucloud.com/ficloud';
-    // 本地调试环境不进行auth
-    if (process.env.NODE_ENV === 'development') {
-        serverUrl = 'http://10.3.14.240/ficloud';
-    }
-    // var serverUrl = "http://127.0.0.1:8080/ficloud";
+/**
+ * serverUrl = http://127.0.0.1:8080/ficloud
+ * serverUrl = http://10.3.14.240/ficloud
+ * serverUrl = https://fi.yonyoucloud.com/ficloud
+ */
+function getConfig(serverUrl) {
     return {
         workechart: {
             metatree: serverUrl + '/echart/metatree'
         },
         refer: {
-            referDataUrl: serverUrl + '/refbase_ctr/queryRefJSON', //refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
-            referDataUserUrl: serverUrl + '/refbase_ctr/queryRefUserJSON' //人员参照API
+            referDataUrl: serverUrl + '/refbase_ctr/queryRefJSON', // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
+            referDataUserUrl: serverUrl + '/refbase_ctr/queryRefUserJSON' // 人员参照API
         }
     };
 }
-var Config = getConfig();
 
 
 var inittree = false;
@@ -162,7 +160,7 @@ var Formula = function (_React$Component) {
             if (!inittree) {
                 inittree = true;
                 var eid = _this2.props.eid;
-                $.get(Config.workechart.metatree, { eid: eid }, function (data) {
+                $.get(getConfig(_this2.props.serverUrl).workechart.metatree, { eid: eid }, function (data) {
                     if (!data.success) {
                         return;
                     }
@@ -363,7 +361,7 @@ var Formula = function (_React$Component) {
                                                             onChange: this.handleChange.bind(this, _refItem),
                                                             placeholder: _refText,
                                                             referConditions: { "refCode": _refItem, "refType": "table", "displayFields": ["code", "name", "email"] },
-                                                            referDataUrl: _refItem == 'user' ? Config.refer.referDataUserUrl : Config.refer.referDataUrl,
+                                                            referDataUrl: _refItem == 'user' ? getConfig(this.props.serverUrl).refer.referDataUserUrl : getConfig(this.props.serverUrl).refer.referDataUrl,
                                                             referType: 'list',
                                                             ref: _refItem,
                                                             defaultSelected: defaultSelected
@@ -399,5 +397,11 @@ var Formula = function (_React$Component) {
     return Formula;
 }(_react2["default"].Component);
 
+Formula.propTypes = {
+    /**
+     * 比如http://10.3.14.240/ficloud
+     */
+    serverUrl: PropTypes.string.isRequired
+};
 exports["default"] = Formula;
 module.exports = exports['default'];
