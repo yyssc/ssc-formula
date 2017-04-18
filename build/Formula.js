@@ -401,7 +401,7 @@ Formula.propTypes = {
     /**
      * 比如http://10.3.14.240/ficloud
      */
-    serverUrl: PropTypes.string.isRequired
+    serverUrl: _react.PropTypes.string.isRequired
 };
 exports["default"] = Formula;
 module.exports = exports['default'];
