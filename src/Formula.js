@@ -14,8 +14,8 @@
    cancelTxt:'取消'   //取消按钮文字
  *
  */
-import React from 'react';
-import {Modal,Button } from 'react-bootstrap';
+import React, { PropTypes } from 'react';
+import { Modal, Button } from 'react-bootstrap';
 // import Config from '../../config';
 /**
  * serverUrl = http://127.0.0.1:8080/ficloud
