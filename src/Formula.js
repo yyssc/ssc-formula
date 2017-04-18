@@ -17,31 +17,28 @@
 import React, { PropTypes } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 // import Config from '../../config';
-/**
- * serverUrl = http://127.0.0.1:8080/ficloud
- * serverUrl = http://10.3.14.240/ficloud
- * serverUrl = https://fi.yonyoucloud.com/ficloud
- */
-function getConfig(serverUrl) {
-  return {
-    workechart: {
-      metatree: `${serverUrl}/echart/metatree`
-    },
-    refer: {
-      referDataUrl: `${serverUrl}/refbase_ctr/queryRefJSON`, // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
-      referDataUserUrl: `${serverUrl}/refbase_ctr/queryRefUserJSON` // 人员参照API
-    }
-  };
-}
-import {Refers} from 'ssc-refer';
+import { Refers } from 'ssc-refer';
 
 var inittree = false;
 export default class Formula extends React.Component{
   static propTypes = {
     /**
-     * 比如http://10.3.14.240/ficloud
+     * 示例数据
+     * ```js
+     * {
+     *   workechart: {
+     *     metatree: 'http://127.0.0.1:8080/ficloud/echart/metatree'
+     *   }
+     *   refer: {
+     *     // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
+     *     referDataUrl: 'http://10.3.14.240/ficloud/refbase_ctr/queryRefJSON'
+     *     // 人员参照API
+     *     referDataUserUrl: 'https://fi.yonyoucloud.com/ficloud/refbase_ctr/queryRefUserJSON'
+     *   }
+     * }
+     * ```
      */
-    serverUrl: PropTypes.string.isRequired
+    config: PropTypes.object.isRequired
   }
     constructor(props) {
         super(props);
@@ -147,7 +144,7 @@ export default class Formula extends React.Component{
     	if(!inittree ){
     		inittree = true;
     		var eid = this.props.eid ;
-    		 $.get(getConfig(this.props.serverUrl).workechart.metatree,{eid:eid},function (data) {
+    		 $.get(this.props.config.workechart.metatree,{eid:eid},function (data) {
     	            if (!data.success) {
     	                return;
     	            }
@@ -279,8 +276,8 @@ export default class Formula extends React.Component{
 				        							  placeholder={_refText}
 				        							  referConditions={{"refCode":_refItem,"refType":"table","displayFields":["code","name","email"]}}
 				        							  referDataUrl={_refItem=='user'
-                                  ? getConfig(this.props.serverUrl).refer.referDataUserUrl
-                                  : getConfig(this.props.serverUrl).refer.referDataUrl
+                                  ? this.props.config.refer.referDataUserUrl
+                                  : this.props.config.refer.referDataUrl
                                 }
 				        							  referType="list"
 				        							  ref={_refItem}
