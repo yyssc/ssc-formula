@@ -17,28 +17,32 @@
 import React from 'react';
 import {Modal,Button } from 'react-bootstrap';
 // import Config from '../../config';
-function getConfig() {
-  let serverUrl = 'https://fi.yonyoucloud.com/ficloud';
-  // 本地调试环境不进行auth
-  if (process.env.NODE_ENV === 'development') {
-    serverUrl = 'http://10.3.14.240/ficloud';
-  }
-  // var serverUrl = "http://127.0.0.1:8080/ficloud";
+/**
+ * serverUrl = http://127.0.0.1:8080/ficloud
+ * serverUrl = http://10.3.14.240/ficloud
+ * serverUrl = https://fi.yonyoucloud.com/ficloud
+ */
+function getConfig(serverUrl) {
   return {
     workechart: {
-      metatree: serverUrl + '/echart/metatree'
+      metatree: `${serverUrl}/echart/metatree`
     },
-    refer:{
-      referDataUrl:serverUrl+'/refbase_ctr/queryRefJSON', //refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
-      referDataUserUrl:serverUrl+'/refbase_ctr/queryRefUserJSON' //人员参照API
+    refer: {
+      referDataUrl: `${serverUrl}/refbase_ctr/queryRefJSON`, // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
+      referDataUserUrl: `${serverUrl}/refbase_ctr/queryRefUserJSON` // 人员参照API
     }
   };
 }
-const Config = getConfig();
 import {Refers} from 'ssc-refer';
 
 var inittree = false;
 export default class Formula extends React.Component{
+  static propTypes = {
+    /**
+     * 比如http://10.3.14.240/ficloud
+     */
+    serverUrl: PropTypes.string.isRequired
+  }
     constructor(props) {
         super(props);
         props;
@@ -143,7 +147,7 @@ export default class Formula extends React.Component{
     	if(!inittree ){
     		inittree = true;
     		var eid = this.props.eid ;
-    		 $.get(Config.workechart.metatree,{eid:eid},function (data) {
+    		 $.get(getConfig(this.props.serverUrl).workechart.metatree,{eid:eid},function (data) {
     	            if (!data.success) {
     	                return;
     	            }
@@ -274,7 +278,10 @@ export default class Formula extends React.Component{
 				        							  onChange={this.handleChange.bind(this,_refItem)}
 				        							  placeholder={_refText}
 				        							  referConditions={{"refCode":_refItem,"refType":"table","displayFields":["code","name","email"]}}
-				        							  referDataUrl={_refItem=='user'?Config.refer.referDataUserUrl:Config.refer.referDataUrl}
+				        							  referDataUrl={_refItem=='user'
+                                  ? getConfig(this.props.serverUrl).refer.referDataUserUrl
+                                  : getConfig(this.props.serverUrl).refer.referDataUrl
+                                }
 				        							  referType="list"
 				        							  ref={_refItem}
 				        							  defaultSelected={defaultSelected}
