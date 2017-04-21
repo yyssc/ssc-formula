@@ -28,10 +28,10 @@ export default class Formula extends React.Component{
      * {
      *   workechart: {
      *     metatree: 'http://127.0.0.1:8080/ficloud/echart/metatree'
-     *   }
+     *   },
      *   refer: {
      *     // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
-     *     referDataUrl: 'http://10.3.14.240/ficloud/refbase_ctr/queryRefJSON'
+     *     referDataUrl: 'http://10.3.14.240/ficloud/refbase_ctr/queryRefJSON',
      *     // 人员参照API
      *     referDataUserUrl: 'https://fi.yonyoucloud.com/ficloud/refbase_ctr/queryRefUserJSON'
      *   }

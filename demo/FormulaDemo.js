@@ -24,6 +24,17 @@ class Demo extends Component {
           弹出公式编辑器
         </button>
         <Formula
+          config={{
+            workechart: {
+              metatree: 'http://127.0.0.1:3009/ficloud/echart/metatree'
+            },
+            refer: {
+              // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
+              referDataUrl: 'http://127.0.0.1:3009/ficloud/refbase_ctr/queryRefJSON',
+              // 人员参照API
+              referDataUserUrl: 'http://127.0.0.1:3009/ficloud/refbase_ctr/queryRefUserJSON'
+            }
+          }}
           ref="formula"
           formulaText="abc"
           refItem="dept"
