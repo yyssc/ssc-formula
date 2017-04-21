@@ -69,6 +69,7 @@ var Formula = function (_React$Component) {
         };
 
         _this2.sureFn = function () {
+            var that = _this2;
             //begin在此处写逻辑
             var data = document.getElementById('textarea').value; //"formula";
             var list = that.state.list;
@@ -230,7 +231,7 @@ var Formula = function (_React$Component) {
         // console.log(arguments);
         // console.log(selected[0]);
         if (selected && selected.length > 0) {
-            var _that = this;
+            var that = this;
             var selecteditem = selected[0];
             var _refItem = this.props.refItem;
             console.log(selecteditem);
@@ -387,10 +388,10 @@ Formula.propTypes = {
      * {
      *   workechart: {
      *     metatree: 'http://127.0.0.1:8080/ficloud/echart/metatree'
-     *   }
+     *   },
      *   refer: {
      *     // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
-     *     referDataUrl: 'http://10.3.14.240/ficloud/refbase_ctr/queryRefJSON'
+     *     referDataUrl: 'http://10.3.14.240/ficloud/refbase_ctr/queryRefJSON',
      *     // 人员参照API
      *     referDataUserUrl: 'https://fi.yonyoucloud.com/ficloud/refbase_ctr/queryRefUserJSON'
      *   }
