@@ -235,7 +235,7 @@ var Formula = function (_React$Component) {
             var selecteditem = selected[0];
             var _refItem = this.props.refItem;
             console.log(selecteditem);
-            this.insertText(" getID('" + _refItem + "','" + selecteditem.name + "','" + selecteditem.id + "') ");
+            this.insertText('getID("' + _refItem + '","' + selecteditem.name + '","' + selecteditem.id + '") ');
         }
     };
 
