@@ -19,6 +19,7 @@ import { Modal, Button } from 'react-bootstrap';
 // import Config from '../../config';
 import { Refers } from 'ssc-refer';
 
+var inittree = false;
 export default class Formula extends React.Component{
   static propTypes = {
     /**
@@ -51,6 +52,7 @@ export default class Formula extends React.Component{
     }
 
     close = () => {
+    	inittree = false;
         this.setState({ showModal: false });
     }
 
@@ -63,26 +65,15 @@ export default class Formula extends React.Component{
             let _scrollTop = $(top.document).scrollTop();
             let _marginTop = _scrollTop === 0 ? 30 : _scrollTop;
             _dialog.css({"margin-top":_marginTop+"px"});
-        });
-		var eid = this.props.eid;
-        $.get(Config.workechart.metatree,{eid:eid},function (data) {
-            if (!data.success) { return; }
-            var ret =  _this.buildTree( data.data );
-            $("#mytree").append( ret );
-            $("#mytree").treeview() ;
-            $(".formula-tree-leaf").each(function (i, o) {
-                $(o).click(function(){
-                    var text =  $(o).find('span').text();
-                    _this.insertText( ' '+text +' ');
-                });
-            });
+            _this.showEnv('1');
         });
     }
     sureFn = () => {
       let that = this;
         //begin在此处写逻辑
         let data = document.getElementById('textarea').value;//"formula";
-        this.props.backFormula(data);
+        let list = that.state.list;
+        this.props.backFormula(data,list);
         //end在此处写逻辑
         this.close();
     }
@@ -105,6 +96,104 @@ export default class Formula extends React.Component{
         }
     }
 
+    moveEnd = ()   => {
+    	var obj = document.getElementById('textarea');
+        obj.focus();
+        var len = obj.value.length;
+        if (document.selection) {
+            var sel = obj.createTextRange();
+            sel.moveStart('character',len);
+            sel.collapse();
+            sel.select();
+        } else if (typeof obj.selectionStart == 'number' && typeof obj.selectionEnd == 'number') {
+            obj.selectionStart = obj.selectionEnd = len;
+        }
+    }
+    
+    showEnv = (tid)   => {
+    	for(var index=1;index<=2;index++){
+    		var obj = $('#env'+index);
+    		var title = $('#envtitle'+index);
+        	if(!obj.hasClass('none')){
+        		obj.addClass('none');
+        	}
+        	if(tid!=index  ){
+        		if(!title.hasClass('btn-default')){
+            		title.addClass('btn-default');
+            	}
+            	if(title.hasClass('btn-primary')){
+            		title.removeClass('btn-primary');
+            	}
+        	}
+        	
+    	}
+    	
+    	var obj = $('#env'+tid);
+    	if(obj.hasClass('none')){
+    		obj.removeClass('none');
+    	}
+    	var title = $('#envtitle'+tid);
+    	if(title.hasClass('btn-default')){
+    		title.removeClass('btn-default');
+    	}
+    	if(!title.hasClass('btn-primary')){
+    		title.addClass('btn-primary');
+    	}
+    	
+    	var that = this;
+    	
+    	if(!inittree ){
+    		inittree = true;
+    		var eid = this.props.eid ;
+    		 $.get(this.props.config.workechart.metatree,{eid:eid},function (data) {
+    	            if (!data.success) {
+    	                return;
+    	            }
+    	            var ret =  that.buildTree( data.data );
+    	            $("#mytree").append( ret );
+    	            $("#mytree").treeview() ;
+    	    		$(".formula-tree-leaf").each(function (i, o) {
+    	    			$(o).click(function(){ 
+    	    				var text =  $(o).find('span').text();
+    	               	 	that.insertText( ' '+text +' ');
+    	    			});
+    	             });
+    	            
+    			 });
+    		 
+    	}
+    }
+    showContent = (tid)   => {
+    	for(var index=1;index<=3;index++){
+    		var obj = $('#content'+index);
+    		var title = $('#title'+index);
+        	if(!obj.hasClass('none')){
+        		obj.addClass('none');
+        	}
+        	if(tid!=index  ){
+        		if(!title.hasClass('btn-default')){
+            		title.addClass('btn-default');
+            	}
+            	if(title.hasClass('btn-primary')){
+            		title.removeClass('btn-primary');
+            	}
+        	}
+        	
+    	}
+    	
+    	var obj = $('#content'+tid);
+    	if(obj.hasClass('none')){
+    		obj.removeClass('none');
+    	}
+    	var title = $('#title'+tid);
+    	if(title.hasClass('btn-default')){
+    		title.removeClass('btn-default');
+    	}
+    	if(!title.hasClass('btn-primary')){
+    		title.addClass('btn-primary');
+    	}
+    }
+    
     buildTree = (datas,parentKey)   => {
     	var ret ='';
     	var that = this;
@@ -132,69 +221,85 @@ export default class Formula extends React.Component{
     	
     }
     handleChange(item,selected,event){
+        // console.log(arguments);
+        // console.log(selected[0]);
     	if(selected && selected.length>0){
     		 let that = this;
     	     let selecteditem =selected[0];
     	     let _refItem= this.props.refItem ;
-    	     that.insertText( " getID('"+_refItem+"','"+selecteditem.name +"','"+selecteditem.id+"') ");
-    	}		
-    }
-	
-	renderMenuItemChildren(option,props,index) {    // 参照的显示 { code name }
-        return (
-            <div>
-                <span>{option.code}{option.name}</span>
-            </div>
-        );
-    }
-	  
-	  
+    	     console.log(selecteditem);
+    	     this.insertText( " getID('"+_refItem+"','"+selecteditem.name +"','"+selecteditem.id+"') ");
+    	}
+        		
+      }
     render () {
-        let _this = this;
-        let _textArea = this.props.formulaText;
-        let _refText = this.props.refText;
-        let _refItem = this.props.refItem;
-        let defaultSelected = this.props.refSelected ? Object.assign([], [this.props.refSelected]) : [];
+        let _this=this;
+        let _textArea= this.props.formulaText ;
+        let _refText= this.props.refText ;
+        let _refItem= this.props.refItem ;
+        let defaultSelected= this.props.refSelected ? Object.assign([],[this.props.refSelected]) : []
         return (
-            <Modal show={_this.state.showModal} onHide={_this.close} className="static-modal">
+            <Modal show ={this.state.showModal} onHide={this.close} className ="static-modal">
                 <Modal.Header closeButton>
-                    <Modal.Title>{_this.state.title}</Modal.Title>
+                    <Modal.Title>{this.state.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <textarea id='textarea' rows="8" cols="70"
-                              className="form-control formula-resizenone">{_textArea}</textarea>
-                    <ul className="nav nav-tabs" role="tablist">
-                        <li role="presentation" className="active"><a href="#home" aria-controls="home" role="tab"
-                                                                      data-toggle="tab">元素</a></li>
-                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">固定值</a>
-                        </li>
-                    </ul>
-                    <div className="tab-content">
-                        <div role="tabpanel" className="tab-pane fade in active" id="home">
-                            <ul id="mytree" className="filetree">
-                            </ul>
-                        </div>
-                        <div role="tabpanel" className="tab-pane fade" id="profile">
-                            <div className="filerefer">
-                                <Refers
-                                    emptyLabel=' '
-                                    labelKey="name"
-                                    onChange={_this.handleChange.bind(this,_refItem)}
-                                    placeholder={_refText}
-                                    referConditions={{"refCode":_refItem,"refType":"table","displayFields":["code","name","email"]}}
-                                    referDataUrl={_refItem=='user'?Config.refer.referDataUserUrl:Config.refer.referDataUrl}
-                                    referType="list"
-                                    ref={_refItem}
-                                    defaultSelected={defaultSelected}
-                                    renderMenuItemChildren={_this.renderMenuItemChildren}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <table> 
+                    	<tr> 
+                    		<td colSpan="2">
+                    			<textarea  id = 'textarea'  rows="8" cols="70" className ="formula-resizenone">{_textArea}</textarea>
+                    		</td>
+                    	 </tr>
+                    	 
+                    	 <tr>
+	        				<td colSpan="2">
+		        				<table className="formula-table"> 
+				        			<tr>
+			        					<td width="50px">  <a id="envtitle1" className="btn  btn-primary"  onClick={_this.showEnv.bind(_this,'1')}>元素</a> </td>
+			        					<td width="50px">  <a id="envtitle2"  className="btn btn-default "  onClick={_this.showEnv.bind(_this,'2')}>固定值</a> </td>
+			        					<td>  &nbsp; </td>
+			        				</tr>
+			        				<tr>
+			        					
+			        					<td colSpan="3" > 
+			        						<table className="formula-table-inner"> 
+			        						<tr><td>
+					        					<div id="env1" className="formula-div">
+							        					<ul id="mytree" className="filetree">
+						        					    </ul>
+			        							</div> 
+			        							
+			        							<div id="env2" className="formula-div none">
+				        							<Refers
+				        							  emptyLabel=' '
+				        							  labelKey="name"
+				        							  onChange={this.handleChange.bind(this,_refItem)}
+				        							  placeholder={_refText}
+				        							  referConditions={{"refCode":_refItem,"refType":"table","displayFields":["code","name","email"]}}
+				        							  referDataUrl={_refItem=='user'
+                                  ? this.props.config.refer.referDataUserUrl
+                                  : this.props.config.refer.referDataUrl
+                                }
+				        							  referType="list"
+				        							  ref={_refItem}
+				        							  defaultSelected={defaultSelected}
+				        							/>
+			        							</div> 
+			        						</td></tr>
+			        						</table>
+		        						</td>
+		        					</tr>
+	        					</table>
+	        				</td>
+	        			 </tr>	
+	        			 
+                    </table>	 
+                    		
+                    		
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsStyle="default" onClick={_this.close.bind(this)}>{_this.state.cancelTxt}</Button>
-                    <Button bsStyle="primary" onClick={_this.sureFn.bind(this)}>{_this.state.sureTxt}</Button>
+                    <Button bsStyle="primary" onClick={_this.close}>{_this.state.cancelTxt}</Button>
+                    <Button bsStyle="primary" onClick={_this.sureFn}>{_this.state.sureTxt}</Button>
                 </Modal.Footer>
             </Modal>
         );
