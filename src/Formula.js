@@ -228,7 +228,7 @@ export default class Formula extends React.Component{
     	     let selecteditem =selected[0];
     	     let _refItem= this.props.refItem ;
     	     console.log(selecteditem);
-    	     this.insertText( " getID('"+_refItem+"','"+selecteditem.name +"','"+selecteditem.id+"') ");
+    	     this.insertText(`getID("${_refItem}","${selecteditem.name}","${selecteditem.id}") `);
     	}
         		
       }
