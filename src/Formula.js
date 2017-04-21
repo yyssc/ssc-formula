@@ -69,6 +69,7 @@ export default class Formula extends React.Component{
         });
     }
     sureFn = () => {
+      let that = this;
         //begin在此处写逻辑
         let data = document.getElementById('textarea').value;//"formula";
         let list = that.state.list;
