@@ -40,6 +40,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // import Config from '../../config';
 
 
+var inittree = false;
+
 var Formula = function (_React$Component) {
     _inherits(Formula, _React$Component);
 
@@ -49,6 +51,7 @@ var Formula = function (_React$Component) {
         var _this2 = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
         _this2.close = function () {
+            inittree = false;
             _this2.setState({ showModal: false });
         };
 
@@ -61,21 +64,7 @@ var Formula = function (_React$Component) {
                 var _scrollTop = $(top.document).scrollTop();
                 var _marginTop = _scrollTop === 0 ? 30 : _scrollTop;
                 _dialog.css({ "margin-top": _marginTop + "px" });
-            });
-            var eid = _this2.props.eid;
-            $.get(Config.workechart.metatree, { eid: eid }, function (data) {
-                if (!data.success) {
-                    return;
-                }
-                var ret = _this.buildTree(data.data);
-                $("#mytree").append(ret);
-                $("#mytree").treeview();
-                $(".formula-tree-leaf").each(function (i, o) {
-                    $(o).click(function () {
-                        var text = $(o).find('span').text();
-                        _this.insertText(' ' + text + ' ');
-                    });
-                });
+                _this.showEnv('1');
             });
         };
 
@@ -83,7 +72,8 @@ var Formula = function (_React$Component) {
             var that = _this2;
             //begin在此处写逻辑
             var data = document.getElementById('textarea').value; //"formula";
-            _this2.props.backFormula(data);
+            var list = that.state.list;
+            _this2.props.backFormula(data, list);
             //end在此处写逻辑
             _this2.close();
         };
@@ -103,6 +93,101 @@ var Formula = function (_React$Component) {
                 obj.selectionStart = obj.selectionEnd = cursorPos;
             } else {
                 obj.value += str;
+            }
+        };
+
+        _this2.moveEnd = function () {
+            var obj = document.getElementById('textarea');
+            obj.focus();
+            var len = obj.value.length;
+            if (document.selection) {
+                var sel = obj.createTextRange();
+                sel.moveStart('character', len);
+                sel.collapse();
+                sel.select();
+            } else if (typeof obj.selectionStart == 'number' && typeof obj.selectionEnd == 'number') {
+                obj.selectionStart = obj.selectionEnd = len;
+            }
+        };
+
+        _this2.showEnv = function (tid) {
+            for (var index = 1; index <= 2; index++) {
+                var obj = $('#env' + index);
+                var title = $('#envtitle' + index);
+                if (!obj.hasClass('none')) {
+                    obj.addClass('none');
+                }
+                if (tid != index) {
+                    if (!title.hasClass('btn-default')) {
+                        title.addClass('btn-default');
+                    }
+                    if (title.hasClass('btn-primary')) {
+                        title.removeClass('btn-primary');
+                    }
+                }
+            }
+
+            var obj = $('#env' + tid);
+            if (obj.hasClass('none')) {
+                obj.removeClass('none');
+            }
+            var title = $('#envtitle' + tid);
+            if (title.hasClass('btn-default')) {
+                title.removeClass('btn-default');
+            }
+            if (!title.hasClass('btn-primary')) {
+                title.addClass('btn-primary');
+            }
+
+            var that = _this2;
+
+            if (!inittree) {
+                inittree = true;
+                var eid = _this2.props.eid;
+                $.get(_this2.props.config.workechart.metatree, { eid: eid }, function (data) {
+                    if (!data.success) {
+                        return;
+                    }
+                    var ret = that.buildTree(data.data);
+                    $("#mytree").append(ret);
+                    $("#mytree").treeview();
+                    $(".formula-tree-leaf").each(function (i, o) {
+                        $(o).click(function () {
+                            var text = $(o).find('span').text();
+                            that.insertText(' ' + text + ' ');
+                        });
+                    });
+                });
+            }
+        };
+
+        _this2.showContent = function (tid) {
+            for (var index = 1; index <= 3; index++) {
+                var obj = $('#content' + index);
+                var title = $('#title' + index);
+                if (!obj.hasClass('none')) {
+                    obj.addClass('none');
+                }
+                if (tid != index) {
+                    if (!title.hasClass('btn-default')) {
+                        title.addClass('btn-default');
+                    }
+                    if (title.hasClass('btn-primary')) {
+                        title.removeClass('btn-primary');
+                    }
+                }
+            }
+
+            var obj = $('#content' + tid);
+            if (obj.hasClass('none')) {
+                obj.removeClass('none');
+            }
+            var title = $('#title' + tid);
+            if (title.hasClass('btn-default')) {
+                title.removeClass('btn-default');
+            }
+            if (!title.hasClass('btn-primary')) {
+                title.addClass('btn-primary');
             }
         };
 
@@ -143,26 +228,15 @@ var Formula = function (_React$Component) {
     Formula.prototype.componentDidMount = function componentDidMount() {};
 
     Formula.prototype.handleChange = function handleChange(item, selected, event) {
+        // console.log(arguments);
+        // console.log(selected[0]);
         if (selected && selected.length > 0) {
             var that = this;
             var selecteditem = selected[0];
             var _refItem = this.props.refItem;
-            that.insertText(" getID('" + _refItem + "','" + selecteditem.name + "','" + selecteditem.id + "') ");
+            console.log(selecteditem);
+            this.insertText(" getID('" + _refItem + "','" + selecteditem.name + "','" + selecteditem.id + "') ");
         }
-    };
-
-    Formula.prototype.renderMenuItemChildren = function renderMenuItemChildren(option, props, index) {
-        // 参照的显示 { code name }
-        return _react2["default"].createElement(
-            'div',
-            null,
-            _react2["default"].createElement(
-                'span',
-                null,
-                option.code,
-                option.name
-            )
-        );
     };
 
     Formula.prototype.render = function render() {
@@ -173,74 +247,116 @@ var Formula = function (_React$Component) {
         var defaultSelected = this.props.refSelected ? Object.assign([], [this.props.refSelected]) : [];
         return _react2["default"].createElement(
             _reactBootstrap.Modal,
-            { show: _this.state.showModal, onHide: _this.close, className: 'static-modal' },
+            { show: this.state.showModal, onHide: this.close, className: 'static-modal' },
             _react2["default"].createElement(
                 _reactBootstrap.Modal.Header,
                 { closeButton: true },
                 _react2["default"].createElement(
                     _reactBootstrap.Modal.Title,
                     null,
-                    _this.state.title
+                    this.state.title
                 )
             ),
             _react2["default"].createElement(
                 _reactBootstrap.Modal.Body,
                 null,
                 _react2["default"].createElement(
-                    'textarea',
-                    { id: 'textarea', rows: '8', cols: '70',
-                        className: 'form-control formula-resizenone' },
-                    _textArea
-                ),
-                _react2["default"].createElement(
-                    'ul',
-                    { className: 'nav nav-tabs', role: 'tablist' },
+                    'table',
+                    null,
                     _react2["default"].createElement(
-                        'li',
-                        { role: 'presentation', className: 'active' },
+                        'tr',
+                        null,
                         _react2["default"].createElement(
-                            'a',
-                            { href: '#home', 'aria-controls': 'home', role: 'tab',
-                                'data-toggle': 'tab' },
-                            '\u5143\u7D20'
+                            'td',
+                            { colSpan: '2' },
+                            _react2["default"].createElement(
+                                'textarea',
+                                { id: 'textarea', rows: '8', cols: '70', className: 'formula-resizenone' },
+                                _textArea
+                            )
                         )
                     ),
                     _react2["default"].createElement(
-                        'li',
-                        { role: 'presentation' },
+                        'tr',
+                        null,
                         _react2["default"].createElement(
-                            'a',
-                            { href: '#profile', 'aria-controls': 'profile', role: 'tab', 'data-toggle': 'tab' },
-                            '\u56FA\u5B9A\u503C'
-                        )
-                    )
-                ),
-                _react2["default"].createElement(
-                    'div',
-                    { className: 'tab-content' },
-                    _react2["default"].createElement(
-                        'div',
-                        { role: 'tabpanel', className: 'tab-pane fade in active', id: 'home' },
-                        _react2["default"].createElement('ul', { id: 'mytree', className: 'filetree' })
-                    ),
-                    _react2["default"].createElement(
-                        'div',
-                        { role: 'tabpanel', className: 'tab-pane fade', id: 'profile' },
-                        _react2["default"].createElement(
-                            'div',
-                            { className: 'filerefer' },
-                            _react2["default"].createElement(_sscRefer.Refers, {
-                                emptyLabel: ' ',
-                                labelKey: 'name',
-                                onChange: _this.handleChange.bind(this, _refItem),
-                                placeholder: _refText,
-                                referConditions: { "refCode": _refItem, "refType": "table", "displayFields": ["code", "name", "email"] },
-                                referDataUrl: _refItem == 'user' ? Config.refer.referDataUserUrl : Config.refer.referDataUrl,
-                                referType: 'list',
-                                ref: _refItem,
-                                defaultSelected: defaultSelected,
-                                renderMenuItemChildren: _this.renderMenuItemChildren
-                            })
+                            'td',
+                            { colSpan: '2' },
+                            _react2["default"].createElement(
+                                'table',
+                                { className: 'formula-table' },
+                                _react2["default"].createElement(
+                                    'tr',
+                                    null,
+                                    _react2["default"].createElement(
+                                        'td',
+                                        { width: '50px' },
+                                        '  ',
+                                        _react2["default"].createElement(
+                                            'a',
+                                            { id: 'envtitle1', className: 'btn  btn-primary', onClick: _this.showEnv.bind(_this, '1') },
+                                            '\u5143\u7D20'
+                                        ),
+                                        ' '
+                                    ),
+                                    _react2["default"].createElement(
+                                        'td',
+                                        { width: '50px' },
+                                        '  ',
+                                        _react2["default"].createElement(
+                                            'a',
+                                            { id: 'envtitle2', className: 'btn btn-default ', onClick: _this.showEnv.bind(_this, '2') },
+                                            '\u56FA\u5B9A\u503C'
+                                        ),
+                                        ' '
+                                    ),
+                                    _react2["default"].createElement(
+                                        'td',
+                                        null,
+                                        '  \xA0 '
+                                    )
+                                ),
+                                _react2["default"].createElement(
+                                    'tr',
+                                    null,
+                                    _react2["default"].createElement(
+                                        'td',
+                                        { colSpan: '3' },
+                                        _react2["default"].createElement(
+                                            'table',
+                                            { className: 'formula-table-inner' },
+                                            _react2["default"].createElement(
+                                                'tr',
+                                                null,
+                                                _react2["default"].createElement(
+                                                    'td',
+                                                    null,
+                                                    _react2["default"].createElement(
+                                                        'div',
+                                                        { id: 'env1', className: 'formula-div' },
+                                                        _react2["default"].createElement('ul', { id: 'mytree', className: 'filetree' })
+                                                    ),
+                                                    _react2["default"].createElement(
+                                                        'div',
+                                                        { id: 'env2', className: 'formula-div none' },
+                                                        _react2["default"].createElement(_sscRefer.Refers, {
+                                                            emptyLabel: ' ',
+                                                            labelKey: 'name',
+                                                            onChange: this.handleChange.bind(this, _refItem),
+                                                            placeholder: _refText,
+                                                            referConditions: { "refCode": _refItem, "refType": "table", "displayFields": ["code", "name", "email"] },
+                                                            referDataUrl: _refItem == 'user' ? this.props.config.refer.referDataUserUrl : this.props.config.refer.referDataUrl,
+                                                            referType: 'list',
+                                                            ref: _refItem,
+                                                            defaultSelected: defaultSelected
+                                                        })
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
                         )
                     )
                 )
@@ -250,12 +366,12 @@ var Formula = function (_React$Component) {
                 null,
                 _react2["default"].createElement(
                     _reactBootstrap.Button,
-                    { bsStyle: 'default', onClick: _this.close.bind(this) },
+                    { bsStyle: 'primary', onClick: _this.close },
                     _this.state.cancelTxt
                 ),
                 _react2["default"].createElement(
                     _reactBootstrap.Button,
-                    { bsStyle: 'primary', onClick: _this.sureFn.bind(this) },
+                    { bsStyle: 'primary', onClick: _this.sureFn },
                     _this.state.sureTxt
                 )
             )
