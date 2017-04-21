@@ -21,3 +21,9 @@ npm run dev
 4. 打tag： `git tag -a v0.1.0 -m 'v0.1.0'`
 5. push到remote： `git push --follow-tags`
 6. 发布： `npm publish`
+
+## TODO
+
+- [x] Demo
+- [ ] 单元测试
+- [ ] 发布脚本
