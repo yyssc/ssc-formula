@@ -15,7 +15,7 @@
  *
  */
 import React, { PropTypes } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Tabs, Tab } from 'react-bootstrap';
 import { Refers } from 'ssc-refer';
 
 export default class Formula extends React.Component{
@@ -163,20 +163,12 @@ export default class Formula extends React.Component{
                     <Modal.Title>{_this.state.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <textarea id='textarea' rows="8" cols="70"
-                              className="form-control formula-resizenone">{_textArea}</textarea>
-                    <ul className="nav nav-tabs" role="tablist">
-                        <li role="presentation" className="active"><a href="#home" aria-controls="home" role="tab"
-                                                                      data-toggle="tab">元素</a></li>
-                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">固定值</a>
-                        </li>
-                    </ul>
-                    <div className="tab-content">
-                        <div role="tabpanel" className="tab-pane fade in active" id="home">
-                            <ul id="mytree" className="filetree">
-                            </ul>
-                        </div>
-                        <div role="tabpanel" className="tab-pane fade" id="profile">
+                    <textarea id='textarea' rows="8" cols="70" className="form-control formula-resizenone">{_textArea}</textarea>
+                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                         <Tab eventKey={1} title="元素">
+                               <ul id="mytree" className="filetree"></ul>
+                         </Tab>
+                         <Tab eventKey={2} title="固定值">
                             <div className="filerefer">
                                 <Refers
                                     emptyLabel=' '
@@ -191,8 +183,8 @@ export default class Formula extends React.Component{
                                     renderMenuItemChildren={_this.renderMenuItemChildren}
                                 />
                             </div>
-                        </div>
-                    </div>
+                         </Tab>
+                    </Tabs>          
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle="default" onClick={_this.close.bind(this)}>{_this.state.cancelTxt}</Button>
