@@ -185,7 +185,7 @@ export default class Formula extends React.Component{
                                     onChange={_this.handleChange.bind(this,_refItem)}
                                     placeholder={_refText}
                                     referConditions={{"refCode":_refItem,"refType":"table","displayFields":["code","name","email"]}}
-                                    referDataUrl={_refItem=='user'?Config.refer.referDataUserUrl:Config.refer.referDataUrl}
+                                    referDataUrl={_refItem=='user'? this.props.config.refer.referDataUserUrl: this.props.config.refer.referDataUrl}
                                     referType="list"
                                     ref={_refItem}
                                     defaultSelected={defaultSelected}
