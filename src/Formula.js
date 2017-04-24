@@ -16,7 +16,6 @@
  */
 import React, { PropTypes } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-// import Config from '../../config';
 import { Refers } from 'ssc-refer';
 
 export default class Formula extends React.Component{
@@ -75,7 +74,7 @@ export default class Formula extends React.Component{
         });
 		
 		var eid = _this.props.eid;
-        $.get(Config.workechart.metatree,{eid:eid},function (data) {
+        $.get(this.props.config.workechart.metatree,{eid:eid},function (data) {
             if (!data.success) { return; }
             var ret =  _this.buildTree( data.data );
             $("#mytree").append( ret );
