@@ -187,44 +187,20 @@ var Formula = function (_React$Component) {
                 null,
                 _react2["default"].createElement(
                     'textarea',
-                    { id: 'textarea', rows: '8', cols: '70',
-                        className: 'form-control formula-resizenone' },
+                    { id: 'textarea', rows: '8', cols: '70', className: 'form-control formula-resizenone' },
                     _textArea
                 ),
                 _react2["default"].createElement(
-                    'ul',
-                    { className: 'nav nav-tabs', role: 'tablist' },
+                    _reactBootstrap.Tabs,
+                    { defaultActiveKey: 1, id: 'uncontrolled-tab-example' },
                     _react2["default"].createElement(
-                        'li',
-                        { role: 'presentation', className: 'active' },
-                        _react2["default"].createElement(
-                            'a',
-                            { href: '#home', 'aria-controls': 'home', role: 'tab',
-                                'data-toggle': 'tab' },
-                            '\u5143\u7D20'
-                        )
-                    ),
-                    _react2["default"].createElement(
-                        'li',
-                        { role: 'presentation' },
-                        _react2["default"].createElement(
-                            'a',
-                            { href: '#profile', 'aria-controls': 'profile', role: 'tab', 'data-toggle': 'tab' },
-                            '\u56FA\u5B9A\u503C'
-                        )
-                    )
-                ),
-                _react2["default"].createElement(
-                    'div',
-                    { className: 'tab-content' },
-                    _react2["default"].createElement(
-                        'div',
-                        { role: 'tabpanel', className: 'tab-pane fade in active', id: 'home' },
+                        _reactBootstrap.Tab,
+                        { eventKey: 1, title: '\u5143\u7D20' },
                         _react2["default"].createElement('ul', { id: 'mytree', className: 'filetree' })
                     ),
                     _react2["default"].createElement(
-                        'div',
-                        { role: 'tabpanel', className: 'tab-pane fade', id: 'profile' },
+                        _reactBootstrap.Tab,
+                        { eventKey: 2, title: '\u56FA\u5B9A\u503C' },
                         _react2["default"].createElement(
                             'div',
                             { className: 'filerefer' },

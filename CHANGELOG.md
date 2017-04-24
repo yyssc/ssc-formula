@@ -1,3 +1,10 @@
+## [v0.3.7]
+> 2017-04-24
+
+- **Bugfix:** 使用react-bootstrap提供的`<Tab>`组件来实现tab页
+
+[v0.3.7]: https://github.com/yyssc/ssc-formula/compare/v0.3.7...v0.3.8
+
 ## [v0.3.6]
 > 2017-04-24
 
