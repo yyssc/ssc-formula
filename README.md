@@ -15,8 +15,9 @@ npm run dev
 
 ## 如何发布
 
-1. 修改`package.json`中的版本号
-2. 运行如下命令
+1. 修改`CHANGELOG.md`
+2. 修改`package.json`中的版本号
+3. 运行如下命令
 ```
 RELEASE_VERSION=v0.1.0
 npm run build # 编译代码
