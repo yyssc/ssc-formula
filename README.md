@@ -17,9 +17,12 @@ npm run dev
 
 1. 修改`CHANGELOG.md`
 2. 修改`package.json`中的版本号
-3. 运行如下命令
+3. 定义版本号
 ```
 RELEASE_VERSION=v0.1.0
+```
+4. 运行如下命令
+```
 npm run build # 编译代码
 git add . && git commit -m "Release $RELEASE_VERSION" # 提交
 git tag -a $RELEASE_VERSION -m "$RELEASE_VERSION" # 打tag
