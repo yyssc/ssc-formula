@@ -37,8 +37,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  *
  */
 
-// import Config from '../../config';
-
 
 var Formula = function (_React$Component) {
     _inherits(Formula, _React$Component);
@@ -73,7 +71,7 @@ var Formula = function (_React$Component) {
             });
 
             var eid = _this.props.eid;
-            $.get(Config.workechart.metatree, { eid: eid }, function (data) {
+            $.get(_this2.props.config.workechart.metatree, { eid: eid }, function (data) {
                 if (!data.success) {
                     return;
                 }
