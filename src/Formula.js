@@ -157,6 +157,8 @@ export default class Formula extends React.Component{
         let _refText = this.props.refText;
         let _refItem = this.props.refItem;
         let defaultSelected = this.props.refSelected ? Object.assign([], [this.props.refSelected]) : [];
+		const filterByFields = ['name', 'code'];
+		
         return (
             <Modal show={_this.state.showModal} onHide={_this.close} className="static-modal">
                 <Modal.Header closeButton>
@@ -181,6 +183,7 @@ export default class Formula extends React.Component{
                                     ref={_refItem}
                                     defaultSelected={defaultSelected}
                                     renderMenuItemChildren={_this.renderMenuItemChildren}
+									filterBy={filterByFields}
                                 />
                             </div>
                          </Tab>
