@@ -170,6 +170,8 @@ var Formula = function (_React$Component) {
         var _refText = this.props.refText;
         var _refItem = this.props.refItem;
         var defaultSelected = this.props.refSelected ? Object.assign([], [this.props.refSelected]) : [];
+        var filterByFields = ['name', 'code'];
+
         return _react2["default"].createElement(
             _reactBootstrap.Modal,
             { show: _this.state.showModal, onHide: _this.close, className: 'static-modal' },
@@ -214,7 +216,8 @@ var Formula = function (_React$Component) {
                                 referType: 'list',
                                 ref: _refItem,
                                 defaultSelected: defaultSelected,
-                                renderMenuItemChildren: _this.renderMenuItemChildren
+                                renderMenuItemChildren: _this.renderMenuItemChildren,
+                                filterBy: filterByFields
                             })
                         )
                     )
