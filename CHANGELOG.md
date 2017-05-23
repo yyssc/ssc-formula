@@ -1,3 +1,11 @@
+## [v0.3.9]
+> 2017-05-23
+
+- **Bugfix:** 修复`PropTypes`废弃的警告 ([#3])
+
+[v0.3.9]: https://github.com/yyssc/ssc-formula/compare/v0.3.8...v0.3.9
+[#3]: https://github.com/yyssc/ssc-grid/issues/3
+
 ## [v0.3.8]
 > 2017-04-25
 
