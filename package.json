@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "prop-types": "^15.5.10",
     "react-bootstrap": "^0.30.8",
     "ssc-refer": "^0.1.27"
   },

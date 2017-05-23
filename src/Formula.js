@@ -14,7 +14,8 @@
    cancelTxt:'取消'   //取消按钮文字
  *
  */
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Button, Tabs, Tab } from 'react-bootstrap';
 import { Refers } from 'ssc-refer';
 
