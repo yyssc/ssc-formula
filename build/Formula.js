@@ -8,6 +8,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 var _reactBootstrap = require('react-bootstrap');
 
 var _sscRefer = require('ssc-refer');
@@ -260,7 +264,7 @@ Formula.propTypes = {
      * }
      * ```
      */
-    config: _react.PropTypes.object.isRequired
+    config: _propTypes2["default"].object.isRequired
 };
 exports["default"] = Formula;
 module.exports = exports['default'];
