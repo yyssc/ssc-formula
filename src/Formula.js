@@ -14,54 +14,38 @@
    cancelTxt:'取消'   //取消按钮文字
  *
  */
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button, Tabs, Tab } from 'react-bootstrap';
 import { Refers } from 'ssc-refer';
 
-export default class Formula extends React.Component{
-  static propTypes = {
-    /**
-     * 示例数据
-     * ```js
-     * {
-     *   workechart: {
-     *     metatree: 'http://127.0.0.1:8080/ficloud/echart/metatree'
-     *   },
-     *   refer: {
-     *     // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
-     *     referDataUrl: 'http://10.3.14.240/ficloud/refbase_ctr/queryRefJSON',
-     *     // 人员参照API
-     *     referDataUserUrl: 'https://fi.yonyoucloud.com/ficloud/refbase_ctr/queryRefUserJSON'
-     *   }
-     * }
-     * ```
-     */
-    config: PropTypes.object.isRequired
+export default class Formula extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false,
+      title: '公式编辑器',
+      cancelTxt: '取消',
+      sureTxt: '确定'    // 确认按钮文字
+    };
+    this.handleChange = this.handleChange.bind(this);
   }
-    constructor(props) {
-        super(props);
-        props;
-        this.state = {
-            showModal:false,
-            title:"公式编辑器",
-            cancelTxt:'取消',
-            sureTxt:'确定'    // 确认按钮文字
-        }
-    }
+
+  componentDidMount() {
+  }
 
     close = () => {
         this.setState({ showModal: false });
     }
 	
-	sureFn = () => {
-        let that = this;
-        //begin在此处写逻辑
-        let data = document.getElementById('textarea').value;//"formula";
-        that.props.backFormula(data);
-        //end在此处写逻辑
-        that.close();
-    }
+  sureFn = () => {
+      let that = this;
+      //begin在此处写逻辑
+      let data = document.getElementById('textarea').value;//"formula";
+      that.props.backFormula(data);
+      //end在此处写逻辑
+      that.close();
+  }
 
     showAlert = ( ) => {
         let _this = this;
@@ -73,8 +57,8 @@ export default class Formula extends React.Component{
             let _marginTop = _scrollTop === 0 ? 30 : _scrollTop;
             _dialog.css({"margin-top":_marginTop+"px"});
         });
-		
-		var eid = _this.props.eid;
+
+        var eid = _this.props.eid;
         $.get(this.props.config.workechart.metatree,{eid:eid},function (data) {
             if (!data.success) { return; }
             var ret =  _this.buildTree( data.data );
@@ -130,71 +114,161 @@ export default class Formula extends React.Component{
         }
     	return ret ;
     }
-	
-	handleChange(item,selected,event){
-    	if(selected && selected.length>0){
-    		 let that = this;
-    	     let selecteditem =selected[0];
-    	     let _refItem= this.props.refItem ;
-    	     that.insertText(`getID("${_refItem}","${selecteditem.name}","${selecteditem.id}") `);
-    	}    		
+
+  handleChange(selected, event) {
+    if (selected && selected.length > 0) {
+      let selectedItem = selected[0];
+      let refCode = this.props.refCode ;
+      this.insertText(`getID("${refCode}","${selectedItem.name}","${selectedItem.id}") `);
+    }    		
+  }
+
+  /**
+   * 参照的显示 { code name }
+   * @param  {[type]} option [description]
+   * @param  {[type]} props  [description]
+   * @param  {[type]} index  [description]
+   * @return {[type]}        [description]
+   */
+  renderMenuItemChildren(option, props, index) {    
+    return (
+      <div>
+        <span>{option.code}{option.name}</span>
+      </div>
+    );
+  }
+
+  /**
+   * {} => [{}]
+   * @param  {[type]} selected [description]
+   * @return {[type]}          [description]
+   */
+  refersEncode(selected) {
+    return [selected];
+  }
+
+  /**
+   * [] => null
+   * [{}] => {}
+   * @param  {[type]} selecteds [description]
+   * @return {[type]}           [description]
+   */
+  refersDecode(selecteds) {
+    if (selecteds && selecteds.length > 0) {
+      return selecteds[0];
     }
-	
-	renderMenuItemChildren(option,props,index) {    // 参照的显示 { code name }
-        return (
-            <div>
-                <span>{option.code}{option.name}</span>
-            </div>
-        );
+    return null
+  }
+
+  /**
+   * 根据是否传入refCode来决定实现显示“固定值”标签页
+   * @param {number} eventKey Tab组件的eventKey参数
+   */
+  renderRefers(eventKey) {
+    const { refCode, refSelected, refPlaceholder } = this.props;
+
+    if (refCode === null) {
+      return null;
     }
-	
-    componentDidMount() {
-    	
+
+    const filterByFields = ['name', 'code'];
+    const referConditions = {
+      refCode,
+      refType: 'table',
+      displayFields: ['code', 'name', 'email'],
+    };
+
+    // http://git.yonyou.com/sscplatform/FC/issues/55
+    // 郭老师说对于参照实体的应该特殊处理
+    // 赵老师给出了特殊处理的方法就是添加`convertcol`参数
+    if (refCode === 'entity') {
+      referConditions.convertcol = '{name:displayName}';
     }
-    
-    render () {
-        let _this = this;
-        let _textArea = this.props.formulaText;
-        let _refText = this.props.refText;
-        let _refItem = this.props.refItem;
-        let defaultSelected = this.props.refSelected ? Object.assign([], [this.props.refSelected]) : [];
-        const filterByFields = ['name', 'code'];
-		
-        return (
-            <Modal show={_this.state.showModal} onHide={_this.close} className="static-modal">
-                <Modal.Header closeButton>
-                    <Modal.Title>{_this.state.title}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <textarea id='textarea' rows="8" cols="70" className="form-control formula-resizenone">{_textArea}</textarea>
-                    <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
-                         <Tab eventKey={1} title="元素">
-                               <ul id="mytree" className="filetree"></ul>
-                         </Tab>
-                         <Tab eventKey={2} title="固定值">
-                            <div className="filerefer">
-                                <Refers
-                                    emptyLabel=' '
-                                    labelKey="name"
-                                    onChange={_this.handleChange.bind(this,_refItem)}
-                                    placeholder={_refText}
-                                    referConditions={{"refCode":_refItem,"refType":"table","displayFields":["code","name","email"]}}
-                                    referDataUrl={_refItem=='user'? this.props.config.refer.referDataUserUrl: this.props.config.refer.referDataUrl}
-                                    referType="list"
-                                    ref={_refItem}
-                                    defaultSelected={defaultSelected}
-                                    renderMenuItemChildren={_this.renderMenuItemChildren}
-				    filterBy={filterByFields}
-                                />
-                            </div>
-                         </Tab>
-                    </Tabs>          
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button bsStyle="default" onClick={_this.close.bind(this)}>{_this.state.cancelTxt}</Button>
-                    <Button bsStyle="primary" onClick={_this.sureFn.bind(this)}>{_this.state.sureTxt}</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
+
+    return (
+      <Tab eventKey={eventKey} title="固定值">
+        <div className="filerefer">
+          <Refers
+            emptyLabel=" "
+            labelKey="name"
+            onChange={this.handleChange}
+            placeholder={refPlaceholder}
+            referConditions={referConditions}
+            referDataUrl={
+              refCode === 'user'
+                ? this.props.config.refer.referDataUserUrl
+                : this.props.config.refer.referDataUrl
+            }
+            referType="list"
+            ref={refCode}
+            defaultSelected={this.refersEncode(refSelected)}
+            renderMenuItemChildren={this.renderMenuItemChildren}
+            filterBy={filterByFields}
+          />
+        </div>
+      </Tab>
+    );
+  }
+
+  render () {
+    let _this = this;
+    let _textArea = this.props.formulaText;
+    return (
+      <Modal show={_this.state.showModal} onHide={_this.close} className="static-modal">
+        <Modal.Header closeButton>
+          <Modal.Title>{_this.state.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <textarea id='textarea' rows="8" cols="70" className="form-control formula-resizenone">
+            {_textArea}
+          </textarea>
+          <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+            <Tab eventKey={1} title="元素">
+              <ul id="mytree" className="filetree"></ul>
+            </Tab>
+            {this.renderRefers(2)}
+          </Tabs>          
+        </Modal.Body>
+        <Modal.Footer>
+          <Button bsStyle="default" onClick={_this.close.bind(this)}>{_this.state.cancelTxt}</Button>
+          <Button bsStyle="primary" onClick={_this.sureFn.bind(this)}>{_this.state.sureTxt}</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+}
+
+Formula.propTypes = {
+  /**
+   * 示例数据
+   * ```js
+   * {
+   *   workechart: {
+   *     metatree: 'http://127.0.0.1:8080/ficloud/echart/metatree'
+   *   },
+   *   refer: {
+   *     // refer 其他参照，调用refbase_ctr/queryRefJSON 10.3.14.240
+   *     referDataUrl: 'http://10.3.14.240/ficloud/refbase_ctr/queryRefJSON',
+   *     // 人员参照API
+   *     referDataUserUrl: 'https://fi.yonyoucloud.com/ficloud/refbase_ctr/queryRefUserJSON'
+   *   }
+   * }
+   * ```
+   */
+  config: PropTypes.object.isRequired,
+  /**
+   * 参照文本框中的placeholder
+   * @type {[type]}
+   */
+  refPlaceholder: PropTypes.string,
+  /**
+   * 如果公式编辑器内需要显示参照，则需要传入这个属性
+   * 当refCode为entity的时候有些特殊处理，参照代码实现
+   */
+  refCode: PropTypes.string,
+};
+
+Formula.defaultProps = {
+  refPlaceholder: '',
+  refCode: null,
 }

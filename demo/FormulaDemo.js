@@ -6,9 +6,10 @@ import Formula from '../src';
 class Demo extends Component {
   constructor(props) {
     super(props);
+    this.showFormula = this.showFormula.bind(this);
   }
   showFormula() {
-    this.refs.formula.showAlert();
+    this.formula.showAlert();
   }
   handleDataBack(data) {
     alert(data);
@@ -19,7 +20,7 @@ class Demo extends Component {
         <h1>公式编辑器演示</h1>
         <button
           className="btn btn-default"
-          onClick={this.showFormula.bind(this)}
+          onClick={this.showFormula}
         >
           弹出公式编辑器
         </button>
@@ -35,10 +36,10 @@ class Demo extends Component {
               referDataUserUrl: 'http://127.0.0.1:3009/ficloud/refbase_ctr/queryRefUserJSON'
             }
           }}
-          ref="formula"
+          ref={(c) => { this.formula = c; }}
           formulaText="abc"
-          refItem="dept"
-          refText="xxxx"
+          refCode="dept"
+          refPlaceholder="xxxx"
           eid="fier_bxd"
           backFormula={this.handleDataBack.bind(this)}
         />
