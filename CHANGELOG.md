@@ -1,3 +1,11 @@
+## [v0.4.1]
+> 2017-06-01
+
+- **Bugfix:** 通过将[ssc-refer](https://github.com/tigerandgirl/ssc-refer)替换为[ssc-refer2](https://github.com/yyssc/ssc-refer2)解决react警告信息 ([#7])
+
+[v0.4.1]: https://github.com/yyssc/ssc-formula/compare/v0.4.0...v0.4.1
+[#7]: https://github.com/yyssc/ssc-grid/issues/7
+
 ## [v0.4.0]
 > 2017-06-01
 
