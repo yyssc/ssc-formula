@@ -32,7 +32,7 @@
     "classnames": "^2.2.5",
     "prop-types": "^15.5.10",
     "react-bootstrap": "^0.31.0",
-    "ssc-refer": "^0.1.27"
+    "ssc-refer2": "^0.1.31"
   },
   "devDependencies": {
     "bee-tools": "0.0.16",
