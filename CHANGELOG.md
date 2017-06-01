@@ -1,7 +1,17 @@
+## [v0.4.3]
+> 2017-06-01
+
+- **Bugfix:** 参照为entity获取的数据没有name等字段 ([#9])
+
+[v0.4.3]: https://github.com/yyssc/ssc-formula/compare/v0.4.2...v0.4.3
+[#9]: https://github.com/yyssc/ssc-grid/issues/9
+
 ## [v0.4.2]
 > 2017-06-01
 
 由于v0.4.1发布出错了，这里增加一次发布，请不要使用v0.4.2
+
+[v0.4.2]: https://github.com/yyssc/ssc-formula/compare/v0.4.1...v0.4.2
 
 ## [v0.4.1]
 > 2017-06-01
