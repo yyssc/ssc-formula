@@ -1,3 +1,15 @@
+## [v0.4.0]
+> 2017-06-01
+
+- **Feature:** 特殊处理refCode为entity的参照 ([#4])
+- **Feature:** 当没有传refCode的时候则不显示“固定值”这个标签页，这个标签页用来显示参照的
+- **Breaking:** 修改了`Formula`组件的两个参数
+  - `refItem` -> `refCode`
+  - `refText` -> `refPlaceholder`
+
+[v0.4.0]: https://github.com/yyssc/ssc-formula/compare/v0.3.9...v0.4.0
+[#4]: https://github.com/yyssc/ssc-grid/issues/4
+
 ## [v0.3.9]
 > 2017-05-23
 
