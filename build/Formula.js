@@ -230,6 +230,10 @@ var Formula = function (_Component) {
     // 赵老师给出了特殊处理的方法就是添加`convertcol`参数
     if (refCode === 'entity') {
       referConditions.convertcol = '{name:displayName}';
+      // http://git.yonyou.com/sscplatform/FC/issues/55#note_53358
+      // 按照赵老师说的，还需要添加几个参数
+      referConditions.fields = ['id', 'entityName', 'displayName'];
+      referConditions.displayFields = ['id', 'displayName'];
     }
 
     return _react2["default"].createElement(
