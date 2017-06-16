@@ -1,5 +1,7 @@
 # ssc-formula
 
+**注意：本项目已经废弃，请使用 https://github.com/yyssc/ssc-formula2**
+
 ![](screenshot_20170413_005.jpg)
 
 ## 本地开发调试
